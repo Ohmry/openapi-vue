@@ -36,7 +36,7 @@ export default {
       /* global kakao */
       script.onload = () => kakao.maps.load(this.initialize);
       script.src =
-        "http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=2c6c89d2c77f9dae13bfa46e7c7c66d8";
+        "https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=2c6c89d2c77f9dae13bfa46e7c7c66d8";
       document.head.appendChild(script);
     },
     initialize() {
