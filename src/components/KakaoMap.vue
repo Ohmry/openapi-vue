@@ -1,9 +1,9 @@
 <template>
-  <v-container>
+  <v-container ref="container">
     <div
-      class="map-container"
+      class="map"
       ref="map"
-      v-bind:style="{ width: layoutWidth + 'px', height: layoutHeight + 'px' }"
+      v-bind:style="{ width: this.width + 'px', height: this.height + 'px' }"
     ></div>
   </v-container>
 </template>
@@ -11,23 +11,48 @@
 <script>
 export default {
   name: "KakaoMap",
+  props: ["centers"],
   data: () => ({
-    layoutWidth: 500,
-    layoutHeight: 400,
     location: {
-      latitude: 33.450701,
-      longitude: 126.570667,
+      latitude: 35.91906512299429,
+      longitude: 127.440701973167,
     },
+    width: 400,
+    height: 400,
     map: null,
+    markers: [],
   }),
   watch: {
-    location: function (position) {
-      if (this.map) {
-        this.map.setCenter(
-          new kakao.maps.LatLng(position.latitude, position.longitude)
-        );
-      }
-    },
+    // centers: function (value) {
+    //   console.log(this.map)
+    //   console.log('v')
+    //   console.log(value)
+    //   setTimeout(() => {
+    //     value.forEach((center) => {
+    //       let marker = new kakao.maps.Marker({
+    //         position: new kakao.maps.LatLng(center.latitude, center.longitude),
+    //       });
+    //       marker.setMap(this.map)
+    //     });
+    //   }, 500);
+    // },
+    // location: function (position) {
+    //   if (this.map) {
+    //     this.map.setCenter(
+    //       new kakao.maps.LatLng(position.latitude, position.longitude)
+    //     );
+    //     this.map.relayout();
+    //   }
+    // },
+    // size: function () {
+    //   if (this.map) {
+    //     setTimeout(() => {
+    //       this.size = this.$refs.container.clientWidth
+    //       console.log(this.size)
+    //       this.map.relayout();
+    //     }, 500);
+    //   }
+    // },
   },
   components: {},
   methods: {
@@ -45,9 +70,35 @@ export default {
           this.location.latitude,
           this.location.longitude
         ),
-        level: 3,
+        level: 100,
       });
+
+      this.relayout()
+      if(this.centers) this.createMarker()
     },
+    getCenter() {
+      if (!this.map) return { latitude: 0, longitude: 0 };
+
+      let position = this.map.getCenter();
+      return { latitude: position.Ma, longitude: position.La };
+    },
+    relayout() {
+      this.width = this.$refs.container.clientWidth - 20;
+      this.height = this.$refs.container.clientHeight - 20;
+      setTimeout(() => {
+        this.map.relayout();
+      }, 500);
+    },
+    createMarker() {
+      this.centers.forEach(center => {
+        let marker = new kakao.maps.Marker({
+          map: this.map,
+          position: new kakao.maps.LatLng(center.latitude, center.longitude),
+          title: center.centerName,
+        })
+        this.markers.push(marker)     
+      })
+    }
   },
   created() {
     this.map = this.$refs.map;
@@ -67,7 +118,10 @@ export default {
 </script>
 
 <style scoped>
-.map-container {
-  transition: 1s;
+.map {
+  transition: 0.5s;
+}
+.container {
+  height: 100%;
 }
 </style>
