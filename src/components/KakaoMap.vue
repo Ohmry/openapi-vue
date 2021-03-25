@@ -14,8 +14,8 @@ export default {
   props: ["centers"],
   data: () => ({
     location: {
-      latitude: 35.91906512299429,
-      longitude: 127.440701973167,
+      latitude: 35.93782110073764,
+      longitude: 127.35002098673817,
     },
     width: 400,
     height: 400,
@@ -23,36 +23,9 @@ export default {
     markers: [],
   }),
   watch: {
-    // centers: function (value) {
-    //   console.log(this.map)
-    //   console.log('v')
-    //   console.log(value)
-    //   setTimeout(() => {
-    //     value.forEach((center) => {
-    //       let marker = new kakao.maps.Marker({
-    //         position: new kakao.maps.LatLng(center.latitude, center.longitude),
-    //       });
-    //       marker.setMap(this.map)
-    //     });
-    //   }, 500);
-    // },
-    // location: function (position) {
-    //   if (this.map) {
-    //     this.map.setCenter(
-    //       new kakao.maps.LatLng(position.latitude, position.longitude)
-    //     );
-    //     this.map.relayout();
-    //   }
-    // },
-    // size: function () {
-    //   if (this.map) {
-    //     setTimeout(() => {
-    //       this.size = this.$refs.container.clientWidth
-    //       console.log(this.size)
-    //       this.map.relayout();
-    //     }, 500);
-    //   }
-    // },
+    location: function(loc) {
+      if(this.map) this.map.setCenter(new kakao.maps.LatLng(loc.latitude, loc.longitude));
+    }
   },
   components: {},
   methods: {
@@ -70,7 +43,7 @@ export default {
           this.location.latitude,
           this.location.longitude
         ),
-        level: 100,
+        level: 12,
       });
 
       this.relayout()
@@ -83,8 +56,9 @@ export default {
       return { latitude: position.Ma, longitude: position.La };
     },
     relayout() {
-      this.width = this.$refs.container.clientWidth - 20;
-      this.height = this.$refs.container.clientHeight - 20;
+      let width = this.$refs.container.clientWidth - 24
+      this.width = width
+      this.height = width > 400 ? 400 : width
       setTimeout(() => {
         this.map.relayout();
       }, 500);
@@ -120,8 +94,5 @@ export default {
 <style scoped>
 .map {
   transition: 0.5s;
-}
-.container {
-  height: 100%;
 }
 </style>
